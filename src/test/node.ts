@@ -1,4 +1,9 @@
-import { LoginReqBodySchema, TokenResponse } from '@/api/iam/models/iam';
+import {
+  LoginReqBodySchema,
+  TokenResponse,
+  UserCreateReqBodySchema,
+  UserResponse,
+} from '@/api/iam/models/iam';
 import { sleepAsync } from '@/lib/utils';
 import { TEST_USER, TOKEN_RESPONSE } from '@/test/test_data';
 import { http, HttpHandler, HttpResponse } from 'msw';
@@ -22,6 +27,35 @@ const handlers: HttpHandler[] = [
     }
 
     return HttpResponse.json<TokenResponse>(TOKEN_RESPONSE, { status: 200 });
+  }),
+
+  http.post('/iam/v1/users', async ({ request }) => {
+    console.log('create user endpoint is called');
+    await sleepAsync(500);
+
+    const userCreateReqBody = UserCreateReqBodySchema.parse(
+      await request.json(),
+    );
+
+    // throw error if email's already used
+    if (userCreateReqBody.email === TEST_USER.email) {
+      return HttpResponse.json(
+        {
+          message: 'email is already used',
+        },
+        { status: 400 },
+      );
+    }
+
+    return HttpResponse.json<UserResponse>(
+      {
+        ...userCreateReqBody,
+        id: 'newUser-id',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      { status: 201 },
+    );
   }),
 ];
 

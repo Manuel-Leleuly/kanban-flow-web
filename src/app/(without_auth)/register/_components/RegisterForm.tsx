@@ -18,7 +18,13 @@ export const RegisterForm = () => {
   const getErrorMessage = () => {
     if (error) {
       const errorData = FetchUtil.parseServerActionError(error);
-      return errorData.error_message;
+      const { response_data } = errorData;
+      if (response_data) {
+        if (typeof response_data === 'string') {
+          return response_data;
+        }
+        return response_data.message;
+      }
     }
     return '';
   };
@@ -54,6 +60,7 @@ export const RegisterForm = () => {
                   !!field.state.meta.errors.length && 'border-destructive',
                 )}
                 disabled={isLoading}
+                data-testid={field.name + '-input'}
               />
               <FieldError
                 errorMessages={field.state.meta.errors.map(
@@ -85,6 +92,7 @@ export const RegisterForm = () => {
                   !!field.state.meta.errors.length && 'border-destructive',
                 )}
                 disabled={isLoading}
+                data-testid={field.name + '-input'}
               />
               <FieldError
                 errorMessages={field.state.meta.errors.map(
@@ -117,6 +125,7 @@ export const RegisterForm = () => {
                 !!field.state.meta.errors.length && 'border-destructive',
               )}
               disabled={isLoading}
+              data-testid={field.name + '-input'}
             />
             <FieldError
               errorMessages={field.state.meta.errors.map(
@@ -149,6 +158,7 @@ export const RegisterForm = () => {
                   !!field.state.meta.errors.length && 'border-destructive',
                 )}
                 disabled={isLoading}
+                data-testid={field.name + '-input'}
               />
               <Button
                 type='button'
@@ -157,6 +167,7 @@ export const RegisterForm = () => {
                 className='absolute right-0 top-0 h-full px-3 hover:bg-transparent'
                 onClick={() => setIsPasswordVisible((prevState) => !prevState)}
                 disabled={isLoading}
+                data-testid={field.name + '-eye-button'}
               >
                 {isPasswordVisible ? (
                   <EyeOff className='h-4 w-4 text-muted-foreground' />
@@ -196,6 +207,7 @@ export const RegisterForm = () => {
                   !!field.state.meta.errors.length && 'border-destructive',
                 )}
                 disabled={isLoading}
+                data-testid={field.name + '-input'}
               />
               <Button
                 type='button'
@@ -204,6 +216,7 @@ export const RegisterForm = () => {
                 className='absolute right-0 top-0 h-full px-3 hover:bg-transparent'
                 onClick={() => setIsPasswordVisible((prevState) => !prevState)}
                 disabled={isLoading}
+                data-testid={field.name + '-eye-button'}
               >
                 {isPasswordVisible ? (
                   <EyeOff className='h-4 w-4 text-muted-foreground' />
@@ -225,6 +238,7 @@ export const RegisterForm = () => {
         type='submit'
         className='w-full h-11 text-base font-medium'
         disabled={!registerForm.state.isFieldsValid || isLoading}
+        data-testid='register-submit'
       >
         {isLoading ? 'Creating account...' : 'Create account'}
       </Button>

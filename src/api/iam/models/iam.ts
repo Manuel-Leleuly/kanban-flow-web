@@ -34,10 +34,10 @@ export const UserResponseSchema = z.object({
 export type UserResponse = z.infer<typeof UserResponseSchema>;
 
 export const UserCreateReqBodySchema = z.object({
-  email: z.string().nullish(),
-  password: z.string().nullish(),
-  first_name: z.string().nullish(),
-  last_name: z.string().nullish(),
+  email: z.string(),
+  password: z.string(),
+  first_name: z.string(),
+  last_name: z.string(),
 });
 
 export type UserCreateReqBody = z.infer<typeof UserCreateReqBodySchema>;
@@ -46,7 +46,7 @@ export const UserCreateFormSchema = z
   .object({
     first_name: z.string().nonempty('First Name must not be empty'),
     last_name: z.string().nonempty('Last Name must not be empty'),
-    email: z.email(),
+    email: z.email({ error: 'Email must be in the correct format' }),
     password: z
       .string()
       .min(8, 'Password must be at least 8 characters long')

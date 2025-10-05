@@ -7,6 +7,8 @@ import LoginPage from './page';
 
 describe('Login Page', () => {
   it('should render login page', async () => {
+    const user = userEvent.setup();
+
     render(
       TestComponent({
         withQueryClient: true,
@@ -30,6 +32,16 @@ describe('Login Page', () => {
     const passwordInput =
       screen.getByTestId<HTMLInputElement>('password-input');
     expect(passwordInput.placeholder).toBe('Password');
+
+    // password input change type when the eye button is clicked
+    expect(passwordInput).toHaveAttribute('type', 'password');
+    const passwordVisibilityButton = screen.getByTestId<HTMLButtonElement>(
+      'password-eye-button',
+    );
+    await user.click(passwordVisibilityButton);
+    expect(passwordInput).toHaveAttribute('type', 'text');
+    await user.click(passwordVisibilityButton);
+    expect(passwordInput).toHaveAttribute('type', 'password');
 
     const submitButton = screen.getByTestId<HTMLButtonElement>('login-submit');
     expect(submitButton.textContent).toBe('Sign in');
